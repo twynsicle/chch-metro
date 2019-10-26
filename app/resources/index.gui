@@ -1,0 +1,56 @@
+<svg>
+	<defs>
+		<symbol id="loading-bar-template">
+			<g>
+				<rect class="loading-bar" />
+				<animateTransform attributeType="scale" begin="enable" from="0,1" to="1,1" dur="30" final="restore" />
+			</g>
+		</symbol>
+		<symbol id="tile-template" class="item-template" focusable="false" pointer-events="visible" system-events="all">
+    		<svg class="heading">
+    			<use class="icon" href="#static-image">
+    			  <set href="image" attributeName="href" to=""/>
+    			</use>
+    			<text class="title"></text>
+    		</svg>
+    		<svg class="trip-container">
+    			<svg class="trip">
+    				<text class="stop-number"></text>
+    				<text class="eta"></text>
+    			</svg>
+    			<svg class="trip">
+    				<text class="stop-number"></text>
+    				<text class="eta"></text>
+    			</svg>
+    			<svg class="trip">
+    				<text class="stop-number"></text>
+    				<text class="eta"></text>
+    			</svg>
+    		</svg>
+    		<rect id="tile-divider-bottom" height="2" />
+    	</symbol>
+
+	</defs>
+
+	<use id="spinner" href="#spinner" />
+	<rect id="background" />
+	<textarea id="status" class="status">status message to be displayed here</textarea>
+
+	<svg>
+		<use id="loading-bar" href="#loading-bar-template"/>
+		<use id="list" href="#tile-list">
+			<var id="reorder-enabled" value="0"/>
+			<var id="separator-height-bottom" value="2"/>
+
+			<use id="tile-1" href="#tile-list-item" class="item">
+				<use href="#tile-template" />
+			</use>
+			<use id="tile-2" href="#tile-list-item" class="item">
+				<use href="#tile-template" />
+			</use>
+			<use id="tile-3" href="#tile-list-item" class="item">
+				<use href="#tile-template" />
+			</use>
+		</use>
+	</svg>
+</svg>
