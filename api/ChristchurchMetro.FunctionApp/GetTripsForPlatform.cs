@@ -63,7 +63,7 @@ namespace ChristchurchMetro.FunctionApp {
 					var serializer = new XmlSerializer(typeof(JPRoutePositionET2));
 					var routePosition = (JPRoutePositionET2) serializer.Deserialize(await content.ReadAsStreamAsync());
 
-					return ConvertPlatformToPlatformResponseObject(routePosition.Platform);
+					return ConvertPlatformToPlatformResponseObject(platformNumber, routePosition.Platform);
 				}
 			}
 			catch {
@@ -71,7 +71,7 @@ namespace ChristchurchMetro.FunctionApp {
 			}
 		}
 
-		private static PlatformResponse ConvertPlatformToPlatformResponseObject (Platform platform) {
+		private static PlatformResponse ConvertPlatformToPlatformResponseObject(string platformNumber, Platform platform) {
 			var trips = new List<TripResponse>();
 
 			foreach (Route route in platform.Routes) {
@@ -87,7 +87,7 @@ namespace ChristchurchMetro.FunctionApp {
 				}
 			}
 			return new PlatformResponse {
-				PlatformTag = platform.PlatformTag,
+				PlatformNumber = platformNumber,
 				Name = platform.Name,
 				Trips = trips
 			};
@@ -98,7 +98,7 @@ namespace ChristchurchMetro.FunctionApp {
 		}
 		
 		public class PlatformResponse {
-			public string PlatformTag { get; set; }
+			public string PlatformNumber { get; set; }
 			public string Name { get; set; }
 			public List<TripResponse> Trips { get; set; }
 		}

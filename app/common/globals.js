@@ -1,3 +1,0 @@
-export const POLL_FREQUENCY = 30 * 1000;
-
-export const COMPANION_CONNECTION_TIMEOUT = 10 * 1000;

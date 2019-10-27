@@ -1,13 +1,12 @@
 import * as messaging from "messaging";
 import { UI } from "./ui.js";
-import {COMPANION_CONNECTION_TIMEOUT} from "../common/globals";
+import {AppState, COMPANION_CONNECTION_TIMEOUT} from '../common/constants';
 
 let ui = new UI();
 
-console.log('starting');
-
+//TODO do the same thing for a general connection timeout
 let companionLoadTimer = setTimeout(function () {
-	ui.updateUI(MessageState.CompanionTimeout);
+	ui.updateUI(AppState.companionTimeout);
 }, COMPANION_CONNECTION_TIMEOUT);
 
 messaging.peerSocket.onopen = function() {
@@ -18,15 +17,15 @@ messaging.peerSocket.onopen = function() {
 		console.log('client closed');
 	}
 */
-	ui.updateUI(MessageState.Loading);
+	ui.updateUI(AppState.loading);
 };
 
-messaging.peerSocket.onmessage = function(evt) {
+messaging.peerSocket.onmessage = function(event) {
 	// First message from companion received, cancel the companion check timeout.
 	clearTimeout(companionLoadTimer);
-	ui.updateUI(MessageState.Update, JSON.parse(evt.data));
+	ui.updateUI(AppState.update, event.data);
 };
 
 messaging.peerSocket.onerror = function(err) {
-	ui.updateUI(MessageState.Error);
+	ui.updateUI(AppState.error);
 };

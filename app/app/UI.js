@@ -1,4 +1,5 @@
 import document from "document";
+import {AppState} from '../common/constants';
 
 export function UI() {
 	this.statusText = document.getElementById("status");
@@ -11,7 +12,7 @@ export function UI() {
 }
 
 UI.prototype.updateUI = function (state, data) {
-	if (state === MessageState.Update) {
+	if (state === AppState.update) {
 
 		//this.statusText.text = "";
 
@@ -48,9 +49,12 @@ UI.prototype.animateLoadingBar = function() {
 	loadingBar.style.display = 'inline';
 };
 
-UI.prototype.updateList = function(data) {
-	let platforms = data.platforms;
-	//TODO merge platforms with settings to get custom names
+UI.prototype.updateList = function(platforms) {
+	if (!platforms) {
+		console.log('error: ' + platforms);
+		return;
+	}
+
 	let listElements = document.getElementsByClassName('item');
 
 	for (let i = 0; i < listElements.length; i +=1) {
