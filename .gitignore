@@ -1,5 +1,6 @@
 # ide folders
 .idea/
+.vscode/
 
 # Dependency directories
 node_modules/
