@@ -39,7 +39,7 @@ namespace ChristchurchMetro.FunctionApp {
 					.Select(GetPlatformResponseForPlatformNumber));
 
 			var response = new Response {
-				Platforms = platformResponses.ToList()
+				Platforms = platformResponses.Where(pr => pr != null).ToList()
 			};
 
 			var serializerSettings = new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()};
@@ -53,16 +53,21 @@ namespace ChristchurchMetro.FunctionApp {
 		private static async Task<PlatformResponse> GetPlatformResponseForPlatformNumber(string platformNumber) {
 			var url = BaseUrl + platformNumber;
 
-			using (var client = new HttpClient())
-			using (HttpResponseMessage res = await client.GetAsync(url))
-			using (HttpContent content = res.Content) {
-				var xmlDocument = new XmlDocument();
-				xmlDocument.LoadXml(await content.ReadAsStringAsync());
+			try {
+				using (var client = new HttpClient())
+				using (HttpResponseMessage res = await client.GetAsync(url))
+				using (HttpContent content = res.Content) {
+					var xmlDocument = new XmlDocument();
+					xmlDocument.LoadXml(await content.ReadAsStringAsync());
 
-				var serializer = new XmlSerializer(typeof(JPRoutePositionET2));
-				var routePosition = (JPRoutePositionET2) serializer.Deserialize(await content.ReadAsStreamAsync());
+					var serializer = new XmlSerializer(typeof(JPRoutePositionET2));
+					var routePosition = (JPRoutePositionET2) serializer.Deserialize(await content.ReadAsStreamAsync());
 
-				return ConvertPlatformToPlatformResponseObject(routePosition.Platform);
+					return ConvertPlatformToPlatformResponseObject(routePosition.Platform);
+				}
+			}
+			catch {
+				return null;
 			}
 		}
 
