@@ -15,8 +15,7 @@
     "iconFile": "resources/icon.png",
     "wipeColor": "#ffffff",
     "requestedPermissions": [
-      "access_internet",
-      "run_background"
+      "access_internet"
     ],
     "buildTargets": [
       "meson"

@@ -34,9 +34,11 @@
 
 	<use id="spinner" href="#spinner" />
 	<rect id="background" />
-	<textarea id="status" class="status">status message to be displayed here</textarea>
+	<svg id="status">
+		<textarea id="status-text">This is a test</textarea>
+	</svg>
 
-	<svg>
+	<svg id="platforms">
 		<use id="loading-bar" href="#loading-bar-template"/>
 		<use id="list" href="#tile-list">
 			<var id="reorder-enabled" value="0"/>

@@ -4,7 +4,12 @@ import { settingsStorage } from 'settings';
 
 import { MetroApi } from './metro-api';
 //import { MetroApiMock } from "./metro-api-mock";
-import { PLATFORM_SETTING, POLL_FREQUENCY } from '../common/constants';
+import {
+    HEARTBEAT_POLL_FREQUENCY,
+    MessageType,
+    PLATFORM_SETTING,
+    SCHEDULE_POLL_FREQUENCY,
+} from '../common/constants';
 
 const metroApi = new MetroApi();
 
@@ -26,32 +31,34 @@ settingsStorage.onchange = function(evt) {
 
 messaging.peerSocket.onopen = function() {
     console.log('companion open');
-    poll();
+    retrieveAndSendSchedule();
+    pollForSchedule();
+    pollForHeartbeat();
 };
 
 messaging.peerSocket.onmessage = function(evt) {};
 
 messaging.peerSocket.onerror = function(err) {};
 
-function poll() {
-    retrieveAndSendSchedule();
+function pollForSchedule() {
     setTimeout(function() {
         if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
-            //TODO This is a promise, do we want to run every 30 seconds or wait 30 seconds between polls.
             retrieveAndSendSchedule().then(() => {
-                poll();
+                pollForSchedule();
             });
         }
         if (messaging.peerSocket.readyState === messaging.peerSocket.CLOSED) {
             console.log('companion closed');
         }
-    }, POLL_FREQUENCY);
+    }, SCHEDULE_POLL_FREQUENCY);
 }
 
 function retrieveAndSendSchedule() {
-    return retrieveSchedule().then(response => {
-        //console.log('sending' + JSON.stringify(response));
-        messaging.peerSocket.send(response);
+    return retrieveSchedule().then(schedule => {
+        messaging.peerSocket.send({
+            messageType: MessageType.schedule,
+            data: schedule,
+        });
     });
 }
 
@@ -108,4 +115,15 @@ function retrieveSchedule() {
             }
             return merged;
         });
+}
+
+function pollForHeartbeat() {
+    setTimeout(function() {
+        if (messaging.peerSocket.readyState === messaging.peerSocket.OPEN) {
+            messaging.peerSocket.send({
+                messageType: MessageType.heartbeat,
+            });
+        }
+        pollForHeartbeat();
+    }, HEARTBEAT_POLL_FREQUENCY);
 }
